@@ -15,11 +15,11 @@ def new_number(maximum):
 
     # make the number positive
     if sign == 1:
-        print_sign = "mais"
+        print_sign = "plus"
         total += n
     # make the number negative
     else:
-        print_sign = "menos"
+        print_sign = "minus"
         total -= n
 
     return total, print_sign, n
@@ -28,7 +28,7 @@ def new_number(maximum):
 def play_audios(selected_numbers, seconds):
     files = []
     for i in range(len(selected_numbers)):
-        myobj = gTTS(text=selected_numbers[i], lang='pt', slow=False)
+        myobj = gTTS(text=selected_numbers[i], lang='en', slow=False)
         i_string = str(i)
         file = f"{str(0)*(4-len(i_string))}{int(i+1)}.mp3"
         myobj.save(file)
@@ -41,12 +41,12 @@ def play_audios(selected_numbers, seconds):
 
 
 def play_game(number_quantity, maximum, seconds):
-    """Play the game. Parameters are all int:
-        - number_quantity: how many numbers will be displayed
-        - maximum: set the maximum number to be selected at every turn
-        - seconds: interval between each number display
+    """Play the game. Parameters are:
+        - number_quantity (int): how many numbers will be displayed
+        - maximum (int): set the maximum number to be selected at every turn
+        - seconds (float or int): interval between each number display
 
-       Return: None
+        Return: None
     """
     total = 0
     selected_numbers = []
@@ -83,6 +83,14 @@ def play_game(number_quantity, maximum, seconds):
     else:
         print("\n\nYou are wrong.")
         print("Correct total: ", total, "\n\n")
+
+    # print the number sequence and total:
+    final_display = ''
+    for number in selected_numbers[:-1]:
+        final_display += number + " "
+
+    final_display = final_display.replace("minus", "-").replace("plus", "+")
+    print(final_display[2:], "= ", total, '\n\n')
 
 
 if __name__ == '__main__':

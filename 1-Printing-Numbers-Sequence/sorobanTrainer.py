@@ -24,10 +24,10 @@ def new_number(maximum):
 
 
 def play_game(number_quantity, maximum, seconds):
-    """Play the game. Parameters are all int:
-        - number_quantity: how many numbers will be displayed
-        - maximum: set the maximum number to be selected at every turn
-        - seconds: interval between each number display
+    """Play the game. Parameters are:
+        - number_quantity (int): how many numbers will be displayed
+        - maximum (int): set the maximum number to be selected at every turn
+        - seconds (float or int): interval between each number display
 
        Return: None
     """
@@ -51,15 +51,13 @@ def play_game(number_quantity, maximum, seconds):
         # append the final number, with its sign, to the list
         selected_numbers.append(f"{print_sign} {n}")
 
-    selected_numbers.append("Result?")
-
     # Show the selected numbers to the user
     for item in selected_numbers:
         print(item)
         time.sleep(seconds)
 
     # user gives the answer
-    my_total = input("\n\nWhat is the total?  ")
+    my_total = input("\n\nResult?  ")
 
     # compare user's answer with total
     if int(my_total) == total:
