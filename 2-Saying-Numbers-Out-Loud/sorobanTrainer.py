@@ -50,6 +50,7 @@ def play_game(number_quantity, maximum, seconds):
     """
     total = 0
     selected_numbers = []
+    partial_totals = []
 
     for i in range(number_quantity):
         # first number choice for the current round i
@@ -67,6 +68,8 @@ def play_game(number_quantity, maximum, seconds):
 
         # append the final number, with its sign, to the list
         selected_numbers.append(f"{print_sign} {n}")
+        if i != 0:
+            partial_totals.append(str(total))
 
     selected_numbers.append("Result?")
 
@@ -84,13 +87,20 @@ def play_game(number_quantity, maximum, seconds):
         print("\n\nYou are wrong.")
         print("Correct total: ", total, "\n\n")
 
-    # print the number sequence and total:
-    final_display = ''
-    for number in selected_numbers[:-1]:
-        final_display += number + " "
+    # print the formatted number sequence and total:
+    final_display = ""
+    final_display_one_line = ""
+    final_display += f"{selected_numbers[0][3:]} {selected_numbers[1]} = {partial_totals[0]}\n"
+    final_display_one_line += f"{selected_numbers[0]} {selected_numbers[1]}"
+    for i in range(len(selected_numbers[2:-1])):
+        final_display += f"{partial_totals[i]} {selected_numbers[i+2]} = {partial_totals[i+1]}\n"
+        final_display_one_line += f" {selected_numbers[i+2]}"
 
     final_display = final_display.replace("minus", "-").replace("plus", "+")
-    print(final_display[2:], "= ", total, '\n\n')
+    final_display_one_line = final_display_one_line.replace(
+        "minus", "-").replace("plus", "+")
+    print(
+        f"{final_display_one_line} = {total}\n\nPartial results:\n\n{final_display[2:]}\n\n")
 
 
 if __name__ == '__main__':
@@ -98,4 +108,4 @@ if __name__ == '__main__':
     # 5 numbers
     # 9 is the maximum random number
     # 3 seconds intervals
-    play_game(5, 9, 3)
+    play_game(5, 9, 0.1)
