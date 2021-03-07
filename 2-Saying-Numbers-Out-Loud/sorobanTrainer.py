@@ -3,32 +3,49 @@ import os
 import random
 import time
 
+dict = {
+    "plus": ["plus", "mais"],
+    "minus": ["minus", "menos"],
+    "Result?": ["Result?", "Resultado?"],
+    "What is the total?": ["What is the total?", "Qual é o total?"],
+    "You are correct.": ["You are correct.", "Você acertou."],
+    "Congratulations!": ["Congratulations!", "Parabéns!"],
+    "You are wrong.": ["You are wrong.", "Você errou."],
+    "Partial results:": ["Partial results:", "Resultados parciais:"]
+}
 
-def new_number(maximum):
+
+def translate_str(string, language):
+    if language == 'pt':
+        return dict[string][1]
+    return dict[string][0]
+
+
+def new_number(minimum, maximum, language):
     """Generate a random number and choose one of the two 
     operations (sum or subtraction).
     Return a tuple with the following types: int, str, int
     """
-    n = random.randint(1, maximum)
+    n = random.randint(minimum, maximum)
     sign = random.randint(1, 2)
     total = 0
 
     # make the number positive
     if sign == 1:
-        print_sign = "plus"
+        print_sign = translate_str("plus", language)
         total += n
     # make the number negative
     else:
-        print_sign = "minus"
+        print_sign = translate_str("minus", language)
         total -= n
 
     return total, print_sign, n
 
 
-def play_audios(selected_numbers, seconds):
+def play_audios(selected_numbers, seconds, language):
     files = []
     for i in range(len(selected_numbers)):
-        myobj = gTTS(text=selected_numbers[i], lang='en', slow=False)
+        myobj = gTTS(text=selected_numbers[i], lang=language, slow=False)
         i_string = str(i)
         file = f"{str(0)*(4-len(i_string))}{int(i+1)}.mp3"
         myobj.save(file)
@@ -40,7 +57,7 @@ def play_audios(selected_numbers, seconds):
         os.remove(file)
 
 
-def play_game(number_quantity, maximum, seconds):
+def play_game(number_quantity, minimum, maximum, seconds, language):
     """Play the game. Parameters are:
         - number_quantity (int): how many numbers will be displayed
         - maximum (int): set the maximum number to be selected at every turn
@@ -55,7 +72,7 @@ def play_game(number_quantity, maximum, seconds):
     for i in range(number_quantity):
         # first number choice for the current round i
         last_result = 0
-        last_result, print_sign, n = new_number(maximum)
+        last_result, print_sign, n = new_number(minimum, maximum, language)
         total += last_result
 
         # if the chosen number makes the total either lesser than 0 or
@@ -63,7 +80,7 @@ def play_game(number_quantity, maximum, seconds):
         # another one
         while total < 0 or total > maximum:
             total -= last_result
-            last_result, print_sign, n = new_number(maximum)
+            last_result, print_sign, n = new_number(minimum, maximum, language)
             total += last_result
 
         # append the final number, with its sign, to the list
@@ -71,21 +88,21 @@ def play_game(number_quantity, maximum, seconds):
         if i != 0:
             partial_totals.append(str(total))
 
-    selected_numbers.append("Result?")
+    selected_numbers.append(translate_str("Result?", language))
 
     # Say the numbers out loud to the user:
-    play_audios(selected_numbers, seconds)
+    play_audios(selected_numbers, seconds, language)
 
     # user gives the answer
-    my_total = input("\n\nWhat is the total?  ")
+    my_total = input(
+        "\n\n" + translate_str("What is the total?", language) + " ")
 
     # compare user's answer with total
     if int(my_total) == total:
-        print("\n\nYou are correct.")
-        print("Congratulations! \n\n")
+        print("\n\n" + translate_str("You are correct.", language))
+        print(translate_str("Congratulations!", language) + "\n\n")
     else:
-        print("\n\nYou are wrong.")
-        print("Correct total: ", total, "\n\n")
+        print("\n\n" + translate_str("You are wrong.", language))
 
     # print the formatted number sequence and total:
     final_display = ""
@@ -96,11 +113,14 @@ def play_game(number_quantity, maximum, seconds):
         final_display += f"{partial_totals[i]} {selected_numbers[i+2]} = {partial_totals[i+1]}\n"
         final_display_one_line += f" {selected_numbers[i+2]}"
 
-    final_display = final_display.replace("minus", "-").replace("plus", "+")
+    final_display = final_display.replace(translate_str(
+        "minus", language), "-").replace(translate_str("plus", language), "+")
     final_display_one_line = final_display_one_line.replace(
-        "minus", "-").replace("plus", "+")
+        translate_str("minus", language), "-").replace(translate_str("plus", language), "+")
     print(
-        f"{final_display_one_line} = {total}\n\nPartial results:\n\n{final_display[2:]}\n\n")
+        f"{final_display_one_line} = \n\n\n"
+        f"{translate_str('Partial results:', language)} "
+        f"\n\n{final_display[2:]}\n")
 
 
 if __name__ == '__main__':
@@ -108,4 +128,4 @@ if __name__ == '__main__':
     # 5 numbers
     # 9 is the maximum random number
     # 3 seconds intervals
-    play_game(5, 9, 0.1)
+    play_game(10, 1, 9, 3, "en")

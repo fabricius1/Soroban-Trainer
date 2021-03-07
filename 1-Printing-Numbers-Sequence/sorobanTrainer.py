@@ -42,7 +42,7 @@ def play_game(number_quantity, maximum, seconds):
         total += last_result
 
         # if the chosen number makes the total either lesser than 0 or
-        # greater than 9, it throws out this number and chooses
+        # greater than the maximum, it throws out this number and chooses
         # another one
         while total < 0 or total > maximum:
             total -= last_result
@@ -68,7 +68,6 @@ def play_game(number_quantity, maximum, seconds):
         print("Congratulations! \n\n")
     else:
         print("\n\nYou are wrong.")
-        print("Correct total: ", total, "\n\n")
 
     # print the formatted number sequence and total:
     final_display = ""
@@ -80,7 +79,7 @@ def play_game(number_quantity, maximum, seconds):
         final_display_one_line += f" {selected_numbers[i+2]}"
 
     print(
-        f"{final_display_one_line} = {total}\n\nPartial results:\n\n{final_display[2:]}\n\n")
+        f"{final_display_one_line} = \n\n\nPartial results:\n\n{final_display[2:]}\n")
 
 
 if __name__ == '__main__':
